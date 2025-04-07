@@ -22,23 +22,35 @@ const breadcrumbs: BreadcrumbItem[] = [
 type ProfileForm = {
     name: string;
     email: string;
+    profile_picture: File | null;
 }
 
 export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: boolean; status?: string }) {
     const { auth } = usePage<SharedData>().props;
 
-    const { data, setData, patch, errors, processing, recentlySuccessful } = useForm<Required<ProfileForm>>({
+    const { data, setData, patch, post, errors, processing, recentlySuccessful } = useForm<Required<ProfileForm>>({
         name: auth.user.name,
         email: auth.user.email,
+        profile_picture: null
     });
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-
-        patch(route('profile.update'), {
+    
+        post(route('profile.update'), {
+            method: 'patch',
             preserveScroll: true,
+            forceFormData: true,
         });
     };
+
+    // const submit: FormEventHandler = (e) => {
+    //     e.preventDefault();
+
+    //     patch(route('profile.update'), {
+    //         preserveScroll: true,
+    //     });
+    // };
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -49,9 +61,27 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                     <HeadingSmall title="Profile information" description="Update your name and email address" />
 
                     <form onSubmit={submit} className="space-y-6">
+
+                        <div className="grid gap-2">
+                            <Label htmlFor="profile_picture">Profile image</Label>
+                            {typeof auth.user.profile_picture === 'string' && auth.user.profile_picture.trim() !== '' && (
+                                <img
+                                    src={`/storage/${auth.user.profile_picture}`}
+                                    alt="Profile"
+                                    className="h-24 w-24 rounded-full object-cover"
+                                />
+                            )}
+                            <Input
+                                id="profile_picture"
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => setData('profile_picture', e.target.files?.[0] || null)}
+                            />
+                            <InputError className="mt-2" message={errors.profile_picture} />
+                        </div>
+
                         <div className="grid gap-2">
                             <Label htmlFor="name">Name</Label>
-
                             <Input
                                 id="name"
                                 className="mt-1 block w-full"
@@ -61,24 +91,21 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                                 autoComplete="name"
                                 placeholder="Full name"
                             />
-
                             <InputError className="mt-2" message={errors.name} />
                         </div>
 
                         <div className="grid gap-2">
                             <Label htmlFor="email">Email address</Label>
-
                             <Input
                                 id="email"
                                 type="email"
                                 className="mt-1 block w-full"
                                 value={data.email}
                                 onChange={(e) => setData('email', e.target.value)}
-                                required
+                                readOnly
                                 autoComplete="username"
                                 placeholder="Email address"
                             />
-
                             <InputError className="mt-2" message={errors.email} />
                         </div>
 
@@ -106,7 +133,6 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
 
                         <div className="flex items-center gap-4">
                             <Button disabled={processing}>Save</Button>
-
                             <Transition
                                 show={recentlySuccessful}
                                 enter="transition ease-in-out"
