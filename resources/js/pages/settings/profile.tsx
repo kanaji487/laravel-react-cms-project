@@ -2,7 +2,7 @@ import { type BreadcrumbItem, type SharedData } from '@/types';
 import { Transition } from '@headlessui/react';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { FormEventHandler } from 'react';
-
+import { useInitials } from '@/hooks/use-initials';
 import DeleteUser from '@/components/delete-user';
 import HeadingSmall from '@/components/heading-small';
 import InputError from '@/components/input-error';
@@ -27,6 +27,7 @@ type ProfileForm = {
 
 export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: boolean; status?: string }) {
     const { auth } = usePage<SharedData>().props;
+    const getInitials = useInitials();
 
     const { data, setData, patch, post, errors, processing, recentlySuccessful } = useForm<Required<ProfileForm>>({
         name: auth.user.name,
@@ -44,14 +45,6 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
         });
     };
 
-    // const submit: FormEventHandler = (e) => {
-    //     e.preventDefault();
-
-    //     patch(route('profile.update'), {
-    //         preserveScroll: true,
-    //     });
-    // };
-
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Profile settings" />
@@ -64,12 +57,16 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
 
                         <div className="grid gap-2">
                             <Label htmlFor="profile_picture">Profile image</Label>
-                            {typeof auth.user.profile_picture === 'string' && auth.user.profile_picture.trim() !== '' && (
+                            {typeof auth.user.profile_picture === 'string' && auth.user.profile_picture.trim() !== '' ? (
                                 <img
                                     src={`/storage/${auth.user.profile_picture}`}
                                     alt="Profile"
                                     className="h-24 w-24 rounded-full object-cover"
                                 />
+                            ) : (
+                                <div className="h-24 w-24 flex items-center justify-center rounded-full bg-gray-300 text-gray-600 dark:bg-gray-700 dark:text-gray-400 text-xl font-semibold">
+                                    {getInitials(auth.user.name)}
+                                </div>
                             )}
                             <Input
                                 id="profile_picture"
