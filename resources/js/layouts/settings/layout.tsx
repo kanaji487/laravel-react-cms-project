@@ -22,10 +22,14 @@ const sidebarNavItems: NavItem[] = [
         href: '/settings/appearance',
         icon: null,
     },
+    {
+        title: 'Module',
+        href: '/settings/module',
+        icon: null,
+    }
 ];
 
 export default function SettingsLayout({ children }: PropsWithChildren) {
-    // When server-side rendering, we only render the layout on the client...
     if (typeof window === 'undefined') {
         return null;
     }
@@ -39,19 +43,22 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
             <div className="flex flex-col space-y-8 lg:flex-row lg:space-y-0 lg:space-x-12">
                 <aside className="w-full max-w-xl lg:w-48">
                     <nav className="flex flex-col space-y-1 space-x-0">
-                        {sidebarNavItems.map((item, index) => (
+                    {sidebarNavItems
+                        .slice()
+                        .sort((a, b) => a.title.localeCompare(b.title))
+                        .map((item, index) => (
                             <Button
-                                key={`${item.href}-${index}`}
-                                size="sm"
-                                variant="ghost"
-                                asChild
-                                className={cn('w-full justify-start', {
-                                    'bg-muted': currentPath === item.href,
-                                })}
+                            key={`${item.href}-${index}`}
+                            size="sm"
+                            variant="ghost"
+                            asChild
+                            className={cn('w-full justify-start', {
+                                'bg-muted': currentPath === item.href,
+                            })}
                             >
-                                <Link href={item.href} prefetch>
-                                    {item.title}
-                                </Link>
+                            <Link href={item.href} prefetch>
+                                {item.title}
+                            </Link>
                             </Button>
                         ))}
                     </nav>
