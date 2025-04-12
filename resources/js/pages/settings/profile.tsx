@@ -1,6 +1,14 @@
-import { type BreadcrumbItem, type SharedData } from '@/types';
+import { useState } from 'react';
+import { 
+    type BreadcrumbItem, 
+    type SharedData 
+} from '@/types';
 import { Transition } from '@headlessui/react';
-import { Head, Link, useForm, usePage } from '@inertiajs/react';
+import { Head, 
+    Link, 
+    useForm, 
+    usePage 
+} from '@inertiajs/react';
 import { FormEventHandler } from 'react';
 import { useInitials } from '@/hooks/use-initials';
 import DeleteUser from '@/components/delete-user';
@@ -11,6 +19,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
 import SettingsLayout from '@/layouts/settings/layout';
+import CropImageModal from '@/core/crop-image-modal';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -28,8 +37,10 @@ type ProfileForm = {
 export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: boolean; status?: string }) {
     const { auth } = usePage<SharedData>().props;
     const getInitials = useInitials();
+    const [showCrop, setShowCrop] = useState(false);
+    const [srcImage, setSrcImage] = useState<string | null>(null);
 
-    const { data, setData, patch, post, errors, processing, recentlySuccessful } = useForm<Required<ProfileForm>>({
+    const { data, setData, post, errors, processing, recentlySuccessful } = useForm<Required<ProfileForm>>({
         name: auth.user.name,
         email: auth.user.email,
         profile_picture: null
@@ -68,11 +79,19 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                                     {getInitials(auth.user.name)}
                                 </div>
                             )}
-                            <Input
-                                id="profile_picture"
-                                type="file"
-                                accept="image/*"
-                                onChange={(e) => setData('profile_picture', e.target.files?.[0] || null)}
+                            <Button
+                                type="button"
+                                className='w-36'
+                                onClick={() => setShowCrop(true)}
+                            >
+                                Upload Profile Image
+                            </Button>
+                            <CropImageModal
+                                show={showCrop}
+                                onClose={setShowCrop}
+                                srcImage={srcImage}
+                                setSrcImage={setSrcImage}
+                                onCropped={(croppedFile) => setData('profile_picture', croppedFile)}
                             />
                             <InputError className="mt-2" message={errors.profile_picture} />
                         </div>
