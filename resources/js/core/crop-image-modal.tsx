@@ -6,7 +6,8 @@ import {
     DialogFooter,
     DialogClose,
 } from "@/components/ui/dialog";
-import { Button } from '@/components/ui/button';
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import CropImage from './crop-image';
 
 export default function CropImageModal({
@@ -46,15 +47,17 @@ export default function CropImageModal({
                             src={srcImage}
                             onCropDone={(croppedFile) => {
                                 onCropped(croppedFile);
-                                onClose(false);
                                 setSrcImage(null);
+                                onClose(false);
                             }}
+                            setSrcImage={setSrcImage}
+                            onClose={onClose}
                         />
                     ) : (
                         <div className="space-y-2">
                             <label className="block text-sm font-medium text-gray-700">
                                 Upload image
-                                <input
+                                <Input
                                     type="file"
                                     accept="image/*"
                                     onChange={handleFileChange}
@@ -64,14 +67,7 @@ export default function CropImageModal({
                         </div>
                     )}
                 </div>
-
-                <DialogFooter>
-                    <DialogClose asChild>
-                        <Button type="button" variant="secondary">
-                            Cancel
-                        </Button>
-                    </DialogClose>
-                </DialogFooter>
+                
             </DialogContent>
         </Dialog>
     );
