@@ -14,20 +14,24 @@ export default function CropImage(
         src,
         onCropDone,
         onClose,
-        setSrcImage
+        setSrcImage,
+        image_width,
+        image_height
     }: {
         src: string;
         onCropDone: (file: File) => void;
         onClose?: (value: boolean) => void;
         setSrcImage: (value: string | null) => void;
+        image_width: number;
+        image_height: number;
     }
 ) {
     const [crop, setCrop] = useState<Crop>({
         unit: 'px',
         x: 0,
         y: 0,
-        width: TARGET_SIZE,
-        height: TARGET_SIZE,
+        width: image_width,
+        height: image_height,
     });
 
     const [completedCrop, setCompletedCrop] = useState<Crop | null>(null);
@@ -48,8 +52,8 @@ export default function CropImage(
 
         if (!ctx) return;
 
-        canvas.width = TARGET_SIZE * pixelRatio;
-        canvas.height = TARGET_SIZE * pixelRatio;
+        canvas.width = image_width * pixelRatio;
+        canvas.height = image_height * pixelRatio;
 
         ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
         ctx.imageSmoothingQuality = 'high';
@@ -62,8 +66,8 @@ export default function CropImage(
             crop.height * scaleY,
             0,
             0,
-            TARGET_SIZE,
-            TARGET_SIZE
+            image_width,
+            image_height
         );
     }, [completedCrop]);
 

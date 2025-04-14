@@ -16,12 +16,16 @@ export default function CropImageModal({
     srcImage,
     setSrcImage,
     onCropped,
+    image_width,
+    image_height
 }: {
     show: boolean;
     onClose: (value: boolean) => void;
     srcImage: string | null;
     setSrcImage: (value: string | null) => void;
     onCropped: (croppedFile: File) => void;
+    image_width: number;
+    image_height: number;
 }) {
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -52,6 +56,8 @@ export default function CropImageModal({
                             }}
                             setSrcImage={setSrcImage}
                             onClose={onClose}
+                            image_width={image_width}
+                            image_height={image_height}
                         />
                     ) : (
                         <div className="space-y-2">

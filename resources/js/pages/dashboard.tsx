@@ -27,6 +27,7 @@ type User = {
     name: string;
     email: string;
     profile_picture?: string;
+    last_login_at: Date;
 };
 
 export default function Dashboard() {
@@ -53,16 +54,15 @@ export default function Dashboard() {
                     <Table>
                         <TableHeader>
                             <TableRow>
-                                <TableHead>ID</TableHead>
                                 <TableHead>Image</TableHead>
                                 <TableHead>Name</TableHead>
                                 <TableHead>Email</TableHead>
+                                <TableHead>Last login</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {users?.map(user => (
                                 <TableRow key={user.id}>
-                                    <TableCell>{user.id}</TableCell>
                                     <TableCell>
                                     {
                                         user.profile_picture ? (
@@ -80,6 +80,9 @@ export default function Dashboard() {
                                     </TableCell>
                                     <TableCell>{user.name}</TableCell>
                                     <TableCell>{user.email}</TableCell>
+                                    <TableCell>
+                                    {user.last_login_at?.toLocaleString()}
+                                    </TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>

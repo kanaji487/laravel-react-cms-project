@@ -10,6 +10,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
+use Illuminate\Auth\Events\Login;
+use Illuminate\Support\Facades\Event;
+use App\Models\User;
+use Illuminate\Support\Carbon;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -30,8 +34,12 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
-
         $request->session()->regenerate();
+        
+        $user = Auth::user();
+        $user->last_login_at = Carbon::now();
+        $user->save();
+
 
         return redirect()->intended(route('dashboard', absolute: false));
     }

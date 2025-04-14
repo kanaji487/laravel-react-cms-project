@@ -81,7 +81,7 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                             )}
                             <Button
                                 type="button"
-                                className='w-36'
+                                className='w-36 my-4'
                                 onClick={() => setShowCrop(true)}
                             >
                                 Upload Profile Image
@@ -92,6 +92,8 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                                 srcImage={srcImage}
                                 setSrcImage={setSrcImage}
                                 onCropped={(croppedFile) => setData('profile_picture', croppedFile)}
+                                image_width={250}
+                                image_height={250}
                             />
                             <InputError className="mt-2" message={errors.profile_picture} />
                         </div>
