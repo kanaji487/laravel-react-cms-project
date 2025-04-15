@@ -10,15 +10,35 @@ use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Category;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Redirect;
 
 class CategoryController extends Controller
 {
     public function index(Request $request): Response
     {
-        $categories = Category::select('title', 'slug', 'description')->get();
+        $categories = Category::select('title', 'slug', 'description', 'created_at', 'updated_at')->get();
 
         return Inertia::render('content/category/list', [
             'categories' => $categories,
         ]);
+    }
+
+    public function form(Request $request): Response
+    {
+        return Inertia::render('content/category/create');
+    }
+
+    public function create(Request $request)
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'slug' => 'required|string|max:255|unique:category,slug',
+            'description' => 'nullable|string',
+        ]);
+
+        Category::create($validated);
+
+        return Redirect::to('/content/category/list')->with('success', 'Category created successfully!');
     }
 }

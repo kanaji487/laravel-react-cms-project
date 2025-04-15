@@ -1,6 +1,12 @@
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, router } from '@inertiajs/react';
+import { 
+    EllipsisVertical,
+    Pencil,
+    Trash2,
+    Eye
+} from 'lucide-react';
 import { usePage } from '@inertiajs/react';
 import { 
     Table, 
@@ -12,6 +18,11 @@ import {
 } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover";
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -24,6 +35,8 @@ interface Category {
     title: string;
     slug: string;
     description: string;
+    created_at: Date;
+    updated_at: Date;
 }
 
 export default function CategoryList() {
@@ -57,6 +70,9 @@ export default function CategoryList() {
                             <TableHead className="border border-gray-300">Title</TableHead>
                             <TableHead className="border border-gray-300">Slug</TableHead>
                             <TableHead className="border border-gray-300">Description</TableHead>
+                            <TableHead className="border border-gray-300">Created At</TableHead>
+                            <TableHead className="border border-gray-300">Updated At</TableHead>
+                            <TableHead className="border border-gray-300">Action</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -66,6 +82,45 @@ export default function CategoryList() {
                                     <TableCell>{cat.title}</TableCell>
                                     <TableCell>{cat.slug}</TableCell>
                                     <TableCell>{cat.description}</TableCell>
+                                    <TableCell>
+                                        {new Date(cat.created_at).toLocaleString('th-TH', {
+                                            year: 'numeric',
+                                            month: 'short',
+                                            day: 'numeric',
+                                            hour: '2-digit',
+                                            minute: '2-digit',
+                                        })}
+                                    </TableCell>
+                                    <TableCell>
+                                        {new Date(cat.updated_at).toLocaleString('th-TH', {
+                                            year: 'numeric',
+                                            month: 'short',
+                                            day: 'numeric',
+                                            hour: '2-digit',
+                                            minute: '2-digit',
+                                        })}
+                                    </TableCell>
+                                    <TableCell>
+                                        <Popover>
+                                            <PopoverTrigger>
+                                                <EllipsisVertical className="cursor-pointer" />
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-40 bg-zinc-900 text-white p-2 rounded-lg shadow-lg space-y-1">
+                                                <button className="flex items-center gap-2 w-full hover:bg-zinc-800 px-2 py-1 rounded-md transition-colors">
+                                                    <Pencil className="w-4 h-4" />
+                                                    <span>Edit</span>
+                                                </button>
+                                                <button className="flex items-center gap-2 w-full hover:bg-zinc-800 px-2 py-1 rounded-md transition-colors">
+                                                    <Trash2 className="w-4 h-4" />
+                                                    <span>Delete</span>
+                                                </button>
+                                                <button className="flex items-center gap-2 w-full hover:bg-zinc-800 px-2 py-1 rounded-md transition-colors">
+                                                    <Eye className="w-4 h-4" />
+                                                    <span>Quick view</span>
+                                                </button>
+                                            </PopoverContent>
+                                        </Popover>
+                                    </TableCell>
                                 </TableRow>
                             ))
                         ) : (

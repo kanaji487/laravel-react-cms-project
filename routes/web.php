@@ -20,6 +20,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('content', [ContentController::class, 'getContentData'])->name('content');
 
     Route::get('content/category/list', [CategoryController::class, 'index'])->name('category.list');
+    Route::get('content/category/create', [CategoryController::class, 'form'])->name('category.create');
+    Route::post('/content/category/create', [CategoryController::class, 'create']);
 });
 
 require __DIR__.'/settings.php';
