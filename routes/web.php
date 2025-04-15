@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Content\ContentController;
+use App\Http\Controllers\Content\Category\CategoryController;
 
 Route::get('/', function () {
     return Inertia::render('auth/login');
@@ -17,6 +18,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', [UserController::class, 'getUsersData'])->name('dashboard');
 
     Route::get('content', [ContentController::class, 'getContentData'])->name('content');
+
+    Route::get('content/category/list', [CategoryController::class, 'index'])->name('category.list');
 });
 
 require __DIR__.'/settings.php';

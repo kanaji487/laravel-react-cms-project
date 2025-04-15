@@ -15,7 +15,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 const cardItems = [
     {
         title: 'Category',
-        route: '/content/category',
+        route: '/content/category/list',
         icon: <Folder className="w-full h-full" />
     }
 ];
