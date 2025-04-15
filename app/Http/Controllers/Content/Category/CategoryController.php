@@ -17,7 +17,9 @@ class CategoryController extends Controller
 {
     public function index(Request $request): Response
     {
-        $categories = Category::select('title', 'slug', 'description', 'created_at', 'updated_at')->get();
+        $categories = Category::select('title', 'slug', 'description', 'created_at', 'updated_at')
+        ->orderBy('created_at', 'desc')
+        ->paginate(15);
 
         return Inertia::render('content/category/list', [
             'categories' => $categories,
