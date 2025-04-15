@@ -1,6 +1,11 @@
 import AppLayout from '@/layouts/app-layout';
+import CategorySheet from './sheet';
 import { type BreadcrumbItem } from '@/types';
-import { Head, router } from '@inertiajs/react';
+import { Category } from '@/types/category';
+import { 
+    Head, 
+    router 
+} from '@inertiajs/react';
 import { 
     EllipsisVertical,
     Pencil,
@@ -8,6 +13,7 @@ import {
     Eye
 } from 'lucide-react';
 import { usePage } from '@inertiajs/react';
+import { useState } from 'react';
 import { 
     Table, 
     TableHeader, 
@@ -26,9 +32,7 @@ import {
 import {
     Pagination,
     PaginationContent,
-    PaginationEllipsis,
     PaginationItem,
-    PaginationLink,
     PaginationNext,
     PaginationPrevious,
 } from "@/components/ui/pagination";
@@ -39,14 +43,6 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/category',
     },
 ];
-
-interface Category {
-    title: string;
-    slug: string;
-    description: string;
-    created_at: Date;
-    updated_at: Date;
-}
 
 interface PaginatedCategories {
     data: Category[];
@@ -60,6 +56,8 @@ export default function CategoryList() {
 
     const props = usePage().props as unknown as { categories: PaginatedCategories };
     const { data: categories, ...pagination } = props.categories;
+    const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+    const [isSheetOpen, setIsSheetOpen] = useState(false);
 
     const handlePageChange = (url: string | null) => {
         if (url) {
@@ -69,6 +67,11 @@ export default function CategoryList() {
             });
         }
     }
+
+    const handleQuickView = (cat: Category) => {
+        setSelectedCategory(cat);
+        setIsSheetOpen(true);
+    };
 
     return(
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -136,7 +139,10 @@ export default function CategoryList() {
                                                     <Trash2 className="w-4 h-4" />
                                                     <span>Delete</span>
                                                 </button>
-                                                <button className="flex items-center gap-2 w-full hover:bg-zinc-800 px-2 py-1 rounded-md transition-colors">
+                                                <button 
+                                                    onClick={() => handleQuickView(cat)}
+                                                    className="flex items-center gap-2 w-full hover:bg-zinc-800 px-2 py-1 rounded-md transition-colors"
+                                                >
                                                     <Eye className="w-4 h-4" />
                                                     <span>Quick view</span>
                                                 </button>
@@ -156,6 +162,12 @@ export default function CategoryList() {
                             </TableRow>
                         )}
                     </TableBody>
+
+                    <CategorySheet
+                        category={selectedCategory}
+                        open={isSheetOpen}
+                        onClose={() => setIsSheetOpen(false)}
+                    />
                 </Table>
             </div>
 
