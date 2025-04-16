@@ -13,6 +13,10 @@ class Category extends Authenticatable
     protected $fillable = [
         'title',
         'slug',
-        'description'
+        'description',
+        'created_by',
+        'updated_by',
+        'obj_lang',
+        'obj_status'
     ];
 }

@@ -5,4 +5,6 @@ export interface Category {
     description: string;
     created_at: string;
     updated_at: string;
+    obj_lang: string;
+    obj_status: string;
 }

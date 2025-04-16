@@ -5,6 +5,15 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 
 const breadcrumbs: BreadcrumbItem[] = [
     { 
@@ -27,6 +36,8 @@ export default function CategoryCreate(){
         title: '',
         slug: '',
         description: '',
+        obj_lang: '',
+        obj_status: ''
     });
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -80,6 +91,48 @@ export default function CategoryCreate(){
                         />
                         {errors.description && (
                             <p className="text-sm text-red-500 mt-1">{errors.description}</p>
+                        )}
+                    </div>
+
+                    <div className="flex flex-col space-y-2">
+                        <Label>Lang</Label>
+                        <Select
+                            value={data.obj_lang}
+                            onValueChange={(value) => setData('obj_lang', value)}
+                        >
+                            <SelectTrigger className="w-[180px]">
+                                <SelectValue placeholder="Select language" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectGroup>
+                                    <SelectItem value="tha">THA</SelectItem>
+                                    <SelectItem value="eng">ENG</SelectItem>
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
+                        {errors.obj_lang && (
+                            <p className="text-sm text-red-500 mt-1">{errors.obj_lang}</p>
+                        )}
+                    </div>
+
+                    <div className="flex flex-col space-y-2">
+                        <Label>Status</Label>
+                        <Select
+                            value={data.obj_status}
+                            onValueChange={(value) => setData('obj_status', value)}
+                        >
+                            <SelectTrigger className="w-[180px]">
+                                <SelectValue placeholder="Select status" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectGroup>
+                                    <SelectItem value="publish">Publish</SelectItem>
+                                    <SelectItem value="unpublish">Unpublish</SelectItem>
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
+                        {errors.obj_status && (
+                            <p className="text-sm text-red-500 mt-1">{errors.obj_status}</p>
                         )}
                     </div>
 

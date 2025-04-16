@@ -1,5 +1,8 @@
+import thai from '../../../../../public/thailand.png';
+import eng from '../../../../../public/thailand.png';
 import AppLayout from '@/layouts/app-layout';
 import CategorySheet from './sheet';
+import CategoryBadge from './badge';
 import { type BreadcrumbItem } from '@/types';
 import { Category } from '@/types/category';
 import { 
@@ -95,6 +98,8 @@ export default function CategoryList() {
                             <TableHead className="border border-gray-300">Title</TableHead>
                             <TableHead className="border border-gray-300">Slug</TableHead>
                             <TableHead className="border border-gray-300">Description</TableHead>
+                            <TableHead className="border border-gray-300">Lang</TableHead>
+                            <TableHead className="border border-gray-300">Status</TableHead>
                             <TableHead className="border border-gray-300">Created At</TableHead>
                             <TableHead className="border border-gray-300">Updated At</TableHead>
                             <TableHead className="border border-gray-300">Action</TableHead>
@@ -107,6 +112,18 @@ export default function CategoryList() {
                                     <TableCell>{cat.title}</TableCell>
                                     <TableCell>{cat.slug}</TableCell>
                                     <TableCell>{cat.description}</TableCell>
+                                    <TableCell>
+                                        {cat.obj_lang === 'tha' ? (
+                                            <img src={thai} alt="Thai" width={24} height={24} />
+                                        ) : cat.obj_lang === 'eng' ? (
+                                            <img src={eng} alt="English" width={24} height={24} />
+                                        ) : (
+                                            cat.obj_lang
+                                        )}
+                                    </TableCell>
+                                    <TableCell>
+                                        <CategoryBadge status={cat.obj_status} />
+                                    </TableCell>
                                     <TableCell>
                                         {new Date(cat.created_at).toLocaleString('th-TH', {
                                             year: 'numeric',

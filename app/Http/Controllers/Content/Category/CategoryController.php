@@ -17,7 +17,7 @@ class CategoryController extends Controller
 {
     public function index(Request $request): Response
     {
-        $categories = Category::select('title', 'slug', 'description', 'created_at', 'updated_at')
+        $categories = Category::select('title', 'slug', 'description', 'created_at', 'updated_at', 'created_by', 'updated_by', 'obj_lang', 'obj_status')
         ->orderBy('created_at', 'desc')
         ->paginate(15);
 
@@ -37,7 +37,11 @@ class CategoryController extends Controller
             'title' => 'required|string|max:255',
             'slug' => 'required|string|max:255|unique:category,slug',
             'description' => 'nullable|string',
+            'obj_lang' => 'nullable|string|max:10',
+            'obj_status' => 'nullable|string|max:50'
         ]);
+
+        $validated['created_by'] = Auth::id();
 
         Category::create($validated);
 
