@@ -1,5 +1,5 @@
 import thai from '../../../../../public/thailand.png';
-import eng from '../../../../../public/thailand.png';
+import eng from '../../../../../public/english.png';
 import AppLayout from '@/layouts/app-layout';
 import CategorySheet from './sheet';
 import CategoryBadge from './badge';
@@ -76,6 +76,12 @@ export default function CategoryList() {
         setIsSheetOpen(true);
     };
 
+    const handleDelete = (cat: Category) => {
+        router.delete(`/content/category/${cat.id}`, {
+            preserveScroll: true,
+        });
+    };
+
     return(
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Category" />
@@ -148,11 +154,17 @@ export default function CategoryList() {
                                                 <EllipsisVertical className="cursor-pointer" />
                                             </PopoverTrigger>
                                             <PopoverContent className="w-40 bg-zinc-900 text-white p-2 rounded-lg shadow-lg space-y-1">
-                                                <button className="flex items-center gap-2 w-full hover:bg-zinc-800 px-2 py-1 rounded-md transition-colors">
+                                                <button 
+                                                    onClick={() => router.visit(`/content/category/${cat.id}/edit`)}
+                                                    className="flex items-center gap-2 w-full hover:bg-zinc-800 px-2 py-1 rounded-md transition-colors"
+                                                >
                                                     <Pencil className="w-4 h-4" />
                                                     <span>Edit</span>
                                                 </button>
-                                                <button className="flex items-center gap-2 w-full hover:bg-zinc-800 px-2 py-1 rounded-md transition-colors">
+                                                <button 
+                                                    onClick={() => handleDelete(cat)}
+                                                    className="flex items-center gap-2 w-full hover:bg-zinc-800 px-2 py-1 rounded-md transition-colors"
+                                                >
                                                     <Trash2 className="w-4 h-4" />
                                                     <span>Delete</span>
                                                 </button>

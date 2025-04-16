@@ -17,7 +17,7 @@ class CategoryController extends Controller
 {
     public function index(Request $request): Response
     {
-        $categories = Category::select('title', 'slug', 'description', 'created_at', 'updated_at', 'created_by', 'updated_by', 'obj_lang', 'obj_status')
+        $categories = Category::select('id', 'title', 'slug', 'description', 'created_at', 'updated_at', 'created_by', 'updated_by', 'obj_lang', 'obj_status')
         ->orderBy('created_at', 'desc')
         ->paginate(15);
 
@@ -46,5 +46,40 @@ class CategoryController extends Controller
         Category::create($validated);
 
         return Redirect::to('/content/category/list')->with('success', 'Category created successfully!');
+    }
+    
+    public function destroy($id)
+    {
+        $category = Category::findOrFail($id);
+        $category->delete();
+
+        return back()->with('message', 'Category deleted successfully.');
+    }
+
+    public function edit($id)
+    {
+        $category = Category::findOrFail($id);
+
+        return Inertia::render('content/category/edit', [
+            'category' => $category
+        ]);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $category = Category::findOrFail($id);
+
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'slug' => 'required|string|max:255|unique:category,slug,' . $id,
+            'description' => 'nullable|string',
+            'obj_lang' => 'required|in:tha,eng',
+            'obj_status' => 'required|in:publish,unpublish',
+        ]);
+
+        $validated['updated_by'] = Auth::id();
+        $category->update($validated);
+
+        return Redirect::to('/content/category/list')->with('success', 'Category updated successfully.');
     }
 }
