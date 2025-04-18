@@ -39,6 +39,7 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from "@/components/ui/pagination";
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -85,11 +86,11 @@ export default function CategoryList() {
     return(
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Category" />
-
+            
             <div className='p-4 flex flex-row gap-4 justify-between'>
                 <div className='flex flex-row gap-4'>
-                    <Input 
-                        type='text' 
+                    <Input
+                        type='text'
                         className='w-2xl border border-gray-300'
                     />
                     <Button>Search</Button>
@@ -98,106 +99,116 @@ export default function CategoryList() {
             </div>
 
             <div className='px-4'>
-                <Table className="border border-gray-300">
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead className="border border-gray-300">Title</TableHead>
-                            <TableHead className="border border-gray-300">Slug</TableHead>
-                            <TableHead className="border border-gray-300">Description</TableHead>
-                            <TableHead className="border border-gray-300">Lang</TableHead>
-                            <TableHead className="border border-gray-300">Status</TableHead>
-                            <TableHead className="border border-gray-300">Created At</TableHead>
-                            <TableHead className="border border-gray-300">Updated At</TableHead>
-                            <TableHead className="border border-gray-300">Action</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {categories.length > 0 ? (
-                            categories.map((cat, index) => (
-                                <TableRow key={index}>
-                                    <TableCell>{cat.title}</TableCell>
-                                    <TableCell>{cat.slug}</TableCell>
-                                    <TableCell>{cat.description}</TableCell>
-                                    <TableCell>
-                                        {cat.obj_lang === 'tha' ? (
-                                            <img src={thai} alt="Thai" width={24} height={24} />
-                                        ) : cat.obj_lang === 'eng' ? (
-                                            <img src={eng} alt="English" width={24} height={24} />
-                                        ) : (
-                                            cat.obj_lang
-                                        )}
-                                    </TableCell>
-                                    <TableCell>
-                                        <CategoryBadge status={cat.obj_status} />
-                                    </TableCell>
-                                    <TableCell>
-                                        {new Date(cat.created_at).toLocaleString('th-TH', {
-                                            year: 'numeric',
-                                            month: 'short',
-                                            day: 'numeric',
-                                            hour: '2-digit',
-                                            minute: '2-digit',
-                                        })}
-                                    </TableCell>
-                                    <TableCell>
-                                        {new Date(cat.updated_at).toLocaleString('th-TH', {
-                                            year: 'numeric',
-                                            month: 'short',
-                                            day: 'numeric',
-                                            hour: '2-digit',
-                                            minute: '2-digit',
-                                        })}
-                                    </TableCell>
-                                    <TableCell>
-                                        <Popover>
-                                            <PopoverTrigger>
-                                                <EllipsisVertical className="cursor-pointer" />
-                                            </PopoverTrigger>
-                                            <PopoverContent className="w-40 bg-zinc-900 text-white p-2 rounded-lg shadow-lg space-y-1">
-                                                <button 
-                                                    onClick={() => router.visit(`/content/category/${cat.id}/edit`)}
-                                                    className="flex items-center gap-2 w-full hover:bg-zinc-800 px-2 py-1 rounded-md transition-colors"
-                                                >
-                                                    <Pencil className="w-4 h-4" />
-                                                    <span>Edit</span>
-                                                </button>
-                                                <button 
-                                                    onClick={() => handleDelete(cat)}
-                                                    className="flex items-center gap-2 w-full hover:bg-zinc-800 px-2 py-1 rounded-md transition-colors"
-                                                >
-                                                    <Trash2 className="w-4 h-4" />
-                                                    <span>Delete</span>
-                                                </button>
-                                                <button 
-                                                    onClick={() => handleQuickView(cat)}
-                                                    className="flex items-center gap-2 w-full hover:bg-zinc-800 px-2 py-1 rounded-md transition-colors"
-                                                >
-                                                    <Eye className="w-4 h-4" />
-                                                    <span>Quick view</span>
-                                                </button>
-                                            </PopoverContent>
-                                        </Popover>
-                                    </TableCell>
+                <div className="overflow-x-auto">
+                    <div className="w-auto">
+                        <Table className="border border-gray-300">
+                            <TableHeader >
+                                <TableRow>
+                                    <TableHead className="border border-gray-300 w-[150px]">Title</TableHead>
+                                    <TableHead className="border border-gray-300 w-[150px]">Slug</TableHead>
+                                    <TableHead className="border border-gray-300 w-[300px]">Description</TableHead>
+                                    <TableHead className="border border-gray-300 w-[150px]">Lang</TableHead>
+                                    <TableHead className="border border-gray-300 w-[150px]">Status</TableHead>
+                                    <TableHead className="border border-gray-300 w-[150px]">Created At</TableHead>
+                                    <TableHead className="border border-gray-300 w-[150px]">Updated At</TableHead>
+                                    <TableHead className="border border-gray-300 w-[150px]">Action</TableHead>
                                 </TableRow>
-                            ))
-                        ) : (
-                            <TableRow>
-                                <TableCell 
-                                    colSpan={6}
-                                    className='text-center'
-                                >
-                                    No categories available
-                                </TableCell>
-                            </TableRow>
-                        )}
-                    </TableBody>
+                            </TableHeader>
+                            <TableBody>
+                                {categories.length > 0 ? (
+                                    categories.map((cat, index) => (
+                                        <TableRow key={index}>
+                                            <TableCell className='w-[150px]'>{cat.title}</TableCell>
+                                            <TableCell className='w-[150px]'>{cat.slug}</TableCell>
+                                            <TableCell className='whitespace-nowrap overflow-hidden text-ellipsis w-[300px]'>{cat.description}</TableCell>
+                                            <TableCell className='max-w-[150px]'>
+                                                {cat.obj_lang === 'tha' ? (
+                                                    <img src={thai} alt="Thai" width={24} height={24} />
+                                                ) : cat.obj_lang === 'eng' ? (
+                                                    <img src={eng} alt="English" width={24} height={24} />
+                                                ) : (
+                                                    cat.obj_lang
+                                                )}
+                                            </TableCell>
+                                            <TableCell className='w-[150px]'>
+                                                <CategoryBadge status={cat.obj_status} />
+                                            </TableCell>
+                                            <TableCell className='w-[150px]'>
+                                                {new Date(cat.created_at).toLocaleString('th-TH', {
+                                                    year: 'numeric',
+                                                    month: 'short',
+                                                    day: 'numeric',
+                                                    hour: '2-digit',
+                                                    minute: '2-digit',
+                                                })}
+                                            </TableCell>
+                                            <TableCell className='w-[150px]'>
+                                                {new Date(cat.updated_at).toLocaleString('th-TH', {
+                                                    year: 'numeric',
+                                                    month: 'short',
+                                                    day: 'numeric',
+                                                    hour: '2-digit',
+                                                    minute: '2-digit',
+                                                })}
+                                            </TableCell>
+                                            <TableCell className='w-[150px]'>
+                                                <Popover>
+                                                    <PopoverTrigger>
+                                                        <EllipsisVertical className="cursor-pointer" />
+                                                    </PopoverTrigger>
+                                                    <PopoverContent className="w-40 bg-zinc-900 text-white p-2 rounded-lg shadow-lg space-y-1">
+                                                        <button
+                                                            onClick={() => router.visit(`/content/category/${cat.id}/edit`)}
+                                                            className="flex items-center gap-2 w-full hover:bg-zinc-800 px-2 py-1 rounded-md transition-colors"
+                                                        >
+                                                            <Pencil className="w-4 h-4" />
+                                                            <span>Edit</span>
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleDelete(cat)}
+                                                            className="flex items-center gap-2 w-full hover:bg-zinc-800 px-2 py-1 rounded-md transition-colors"
+                                                        >
+                                                            <Trash2 className="w-4 h-4" />
+                                                            <span>Delete</span>
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleQuickView(cat)}
+                                                            className="flex items-center gap-2 w-full hover:bg-zinc-800 px-2 py-1 rounded-md transition-colors"
+                                                        >
+                                                            <Eye className="w-4 h-4" />
+                                                            <span>Quick view</span>
+                                                        </button>
+                                                    </PopoverContent>
+                                                </Popover>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))
+                                ) : (
+                                    <TableRow>
+                                        <TableCell
+                                            colSpan={6}
+                                            className='text-center'
+                                        >
+                                            No categories available
+                                        </TableCell>
+                                    </TableRow>
+                                )}
+                            </TableBody>
+
+                            <CategorySheet
+                                category={selectedCategory}
+                                open={isSheetOpen}
+                                onClose={() => setIsSheetOpen(false)}
+                            />
+                        </Table>
+                    </div>
 
                     <CategorySheet
                         category={selectedCategory}
                         open={isSheetOpen}
                         onClose={() => setIsSheetOpen(false)}
                     />
-                </Table>
+                </div>
             </div>
 
             <Pagination className="px-4 py-4">
