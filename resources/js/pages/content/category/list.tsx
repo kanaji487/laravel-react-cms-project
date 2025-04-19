@@ -17,14 +17,6 @@ import {
 } from 'lucide-react';
 import { usePage } from '@inertiajs/react';
 import { useState } from 'react';
-import { 
-    Table, 
-    TableHeader, 
-    TableBody, 
-    TableRow, 
-    TableCell, 
-    TableHead 
-} from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import {
@@ -39,7 +31,8 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from "@/components/ui/pagination";
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { DataTable } from '@/components/data-table';
+import type { Column } from '@/components/data-table';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -83,11 +76,106 @@ export default function CategoryList() {
         });
     };
 
+    const columns: Column<Category>[] = [
+        { key: 'title', header: 'Title', className: 'w-[120px]' },
+        { key: 'slug', header: 'Slug', className: 'w-[120px]' },
+        {
+          key: 'description',
+          header: 'Description',
+          className: 'max-w-[250px]',
+          render: (cat) => (
+            <div className="overflow-hidden whitespace-nowrap text-ellipsis">
+              {cat.description}
+            </div>
+          ),
+        },
+        {
+          key: 'obj_lang',
+          header: 'Lang',
+          className: 'w-[50px]',
+          render: (cat) =>
+            cat.obj_lang === 'tha' ? (
+              <img src={thai} alt="Thai" width={24} height={24} />
+            ) : cat.obj_lang === 'eng' ? (
+              <img src={eng} alt="English" width={24} height={24} />
+            ) : (
+              cat.obj_lang
+            ),
+        },
+        {
+          key: 'obj_status',
+          header: 'Status',
+          className: 'w-[120px]',
+          render: (cat) => <CategoryBadge status={cat.obj_status} />,
+        },
+        {
+          key: 'created_at',
+          header: 'Created At',
+          className: 'w-[120px]',
+          render: (cat) =>
+            new Date(cat.created_at).toLocaleString('th-TH', {
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit',
+            }),
+        },
+        {
+          key: 'updated_at',
+          header: 'Updated At',
+          className: 'w-[120px]',
+          render: (cat) =>
+            new Date(cat.updated_at).toLocaleString('th-TH', {
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit',
+            }),
+        },
+        {
+          key: 'actions',
+          header: 'Action',
+          className: 'w-[120px]',
+          render: (cat) => (
+            <Popover>
+              <PopoverTrigger>
+                <EllipsisVertical className="cursor-pointer" />
+              </PopoverTrigger>
+              <PopoverContent className="w-40 bg-zinc-900 text-white p-2 rounded-lg shadow-lg space-y-1">
+                <button
+                  onClick={() => router.visit(`/content/category/${cat.id}/edit`)}
+                  className="flex items-center gap-2 w-full hover:bg-zinc-800 px-2 py-1 rounded-md"
+                >
+                  <Pencil className="w-4 h-4" />
+                  <span>Edit</span>
+                </button>
+                <button
+                  onClick={() => handleDelete(cat)}
+                  className="flex items-center gap-2 w-full hover:bg-zinc-800 px-2 py-1 rounded-md"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  <span>Delete</span>
+                </button>
+                <button
+                  onClick={() => handleQuickView(cat)}
+                  className="flex items-center gap-2 w-full hover:bg-zinc-800 px-2 py-1 rounded-md"
+                >
+                  <Eye className="w-4 h-4" />
+                  <span>Quick view</span>
+                </button>
+              </PopoverContent>
+            </Popover>
+          ),
+        },
+    ];
+
     return(
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Category" />
             
-            <div className='max-w-[1600px]'>
+            <div className='max-w-[1700px]'>
                 <div className='p-4 flex flex-row gap-4 justify-between'>
                     <div className='flex flex-row gap-4'>
                         <Input
@@ -101,106 +189,11 @@ export default function CategoryList() {
 
                 <div className='px-4 overflow-x-auto'>
                     <div className="w-full">
-                        <Table className="border border-gray-300">
-                            <TableHeader >
-                                <TableRow>
-                                    <TableHead className="border border-gray-300 w-[120px]">Title</TableHead>
-                                    <TableHead className="border border-gray-300 w-[120px]">Slug</TableHead>
-                                    <TableHead className="border border-gray-300 w-[250px]">Description</TableHead>
-                                    <TableHead className="border border-gray-300 w-[50px]">Lang</TableHead>
-                                    <TableHead className="border border-gray-300 w-[120px]">Status</TableHead>
-                                    <TableHead className="border border-gray-300 w-[120px]">Created At</TableHead>
-                                    <TableHead className="border border-gray-300 w-[120px]">Updated At</TableHead>
-                                    <TableHead className="border border-gray-300 w-[120px]">Action</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {categories.length > 0 ? (
-                                    categories.map((cat, index) => (
-                                        <TableRow key={index}>
-                                            <TableCell className='w-[120px]'>{cat.title}</TableCell>
-                                            <TableCell className='w-[120px]'>{cat.slug}</TableCell>
-                                            <TableCell className='max-w-[250px] overflow-hidden whitespace-nowrap text-ellipsis'>{cat.description}</TableCell>
-                                            <TableCell className='w-[50px]'>
-                                                {cat.obj_lang === 'tha' ? (
-                                                    <img src={thai} alt="Thai" width={24} height={24} />
-                                                ) : cat.obj_lang === 'eng' ? (
-                                                    <img src={eng} alt="English" width={24} height={24} />
-                                                ) : (
-                                                    cat.obj_lang
-                                                )}
-                                            </TableCell>
-                                            <TableCell className='w-[120px]'>
-                                                <CategoryBadge status={cat.obj_status} />
-                                            </TableCell>
-                                            <TableCell className='w-[120px]'>
-                                                {new Date(cat.created_at).toLocaleString('th-TH', {
-                                                    year: 'numeric',
-                                                    month: 'short',
-                                                    day: 'numeric',
-                                                    hour: '2-digit',
-                                                    minute: '2-digit',
-                                                })}
-                                            </TableCell>
-                                            <TableCell className='w-[120px]'>
-                                                {new Date(cat.updated_at).toLocaleString('th-TH', {
-                                                    year: 'numeric',
-                                                    month: 'short',
-                                                    day: 'numeric',
-                                                    hour: '2-digit',
-                                                    minute: '2-digit',
-                                                })}
-                                            </TableCell>
-                                            <TableCell className='w-[120px]'>
-                                                <Popover>
-                                                    <PopoverTrigger>
-                                                        <EllipsisVertical className="cursor-pointer" />
-                                                    </PopoverTrigger>
-                                                    <PopoverContent className="w-40 bg-zinc-900 text-white p-2 rounded-lg shadow-lg space-y-1">
-                                                        <button
-                                                            onClick={() => router.visit(`/content/category/${cat.id}/edit`)}
-                                                            className="flex items-center gap-2 w-full hover:bg-zinc-800 px-2 py-1 rounded-md transition-colors"
-                                                        >
-                                                            <Pencil className="w-4 h-4" />
-                                                            <span>Edit</span>
-                                                        </button>
-                                                        <button
-                                                            onClick={() => handleDelete(cat)}
-                                                            className="flex items-center gap-2 w-full hover:bg-zinc-800 px-2 py-1 rounded-md transition-colors"
-                                                        >
-                                                            <Trash2 className="w-4 h-4" />
-                                                            <span>Delete</span>
-                                                        </button>
-                                                        <button
-                                                            onClick={() => handleQuickView(cat)}
-                                                            className="flex items-center gap-2 w-full hover:bg-zinc-800 px-2 py-1 rounded-md transition-colors"
-                                                        >
-                                                            <Eye className="w-4 h-4" />
-                                                            <span>Quick view</span>
-                                                        </button>
-                                                    </PopoverContent>
-                                                </Popover>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))
-                                ) : (
-                                    <TableRow>
-                                        <TableCell
-                                            colSpan={6}
-                                            className='text-center'
-                                        >
-                                            No categories available
-                                        </TableCell>
-                                    </TableRow>
-                                )}
-                            </TableBody>
-
-                            <CategorySheet
-                                category={selectedCategory}
-                                open={isSheetOpen}
-                                onClose={() => setIsSheetOpen(false)}
-                            />
-                        </Table>
+                        <DataTable<Category>
+                            data={categories}
+                            columns={columns}
+                            getRowKey={(cat) => cat.id}
+                        />
                     </div>
 
                     <CategorySheet
