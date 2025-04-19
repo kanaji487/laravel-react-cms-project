@@ -87,41 +87,41 @@ export default function CategoryList() {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Category" />
             
-            <div className='p-4 flex flex-row gap-4 justify-between'>
-                <div className='flex flex-row gap-4'>
-                    <Input
-                        type='text'
-                        className='w-2xl border border-gray-300'
-                    />
-                    <Button>Search</Button>
+            <div className='max-w-[1600px]'>
+                <div className='p-4 flex flex-row gap-4 justify-between'>
+                    <div className='flex flex-row gap-4'>
+                        <Input
+                            type='text'
+                            className='w-2xl border border-gray-300'
+                        />
+                        <Button>Search</Button>
+                    </div>
+                    <Button onClick={() => router.visit('/content/category/create')}>Create</Button>
                 </div>
-                <Button onClick={() => router.visit('/content/category/create')}>Create</Button>
-            </div>
 
-            <div className='px-4'>
-                <div className="overflow-x-auto">
-                    <div className="w-auto">
+                <div className='px-4 overflow-x-auto'>
+                    <div className="w-full">
                         <Table className="border border-gray-300">
                             <TableHeader >
                                 <TableRow>
-                                    <TableHead className="border border-gray-300 w-[150px]">Title</TableHead>
-                                    <TableHead className="border border-gray-300 w-[150px]">Slug</TableHead>
-                                    <TableHead className="border border-gray-300 w-[300px]">Description</TableHead>
-                                    <TableHead className="border border-gray-300 w-[150px]">Lang</TableHead>
-                                    <TableHead className="border border-gray-300 w-[150px]">Status</TableHead>
-                                    <TableHead className="border border-gray-300 w-[150px]">Created At</TableHead>
-                                    <TableHead className="border border-gray-300 w-[150px]">Updated At</TableHead>
-                                    <TableHead className="border border-gray-300 w-[150px]">Action</TableHead>
+                                    <TableHead className="border border-gray-300 w-[120px]">Title</TableHead>
+                                    <TableHead className="border border-gray-300 w-[120px]">Slug</TableHead>
+                                    <TableHead className="border border-gray-300 w-[250px]">Description</TableHead>
+                                    <TableHead className="border border-gray-300 w-[50px]">Lang</TableHead>
+                                    <TableHead className="border border-gray-300 w-[120px]">Status</TableHead>
+                                    <TableHead className="border border-gray-300 w-[120px]">Created At</TableHead>
+                                    <TableHead className="border border-gray-300 w-[120px]">Updated At</TableHead>
+                                    <TableHead className="border border-gray-300 w-[120px]">Action</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
                                 {categories.length > 0 ? (
                                     categories.map((cat, index) => (
                                         <TableRow key={index}>
-                                            <TableCell className='w-[150px]'>{cat.title}</TableCell>
-                                            <TableCell className='w-[150px]'>{cat.slug}</TableCell>
-                                            <TableCell className='whitespace-nowrap overflow-hidden text-ellipsis w-[300px]'>{cat.description}</TableCell>
-                                            <TableCell className='max-w-[150px]'>
+                                            <TableCell className='w-[120px]'>{cat.title}</TableCell>
+                                            <TableCell className='w-[120px]'>{cat.slug}</TableCell>
+                                            <TableCell className='max-w-[250px] overflow-hidden whitespace-nowrap text-ellipsis'>{cat.description}</TableCell>
+                                            <TableCell className='w-[50px]'>
                                                 {cat.obj_lang === 'tha' ? (
                                                     <img src={thai} alt="Thai" width={24} height={24} />
                                                 ) : cat.obj_lang === 'eng' ? (
@@ -130,10 +130,10 @@ export default function CategoryList() {
                                                     cat.obj_lang
                                                 )}
                                             </TableCell>
-                                            <TableCell className='w-[150px]'>
+                                            <TableCell className='w-[120px]'>
                                                 <CategoryBadge status={cat.obj_status} />
                                             </TableCell>
-                                            <TableCell className='w-[150px]'>
+                                            <TableCell className='w-[120px]'>
                                                 {new Date(cat.created_at).toLocaleString('th-TH', {
                                                     year: 'numeric',
                                                     month: 'short',
@@ -142,7 +142,7 @@ export default function CategoryList() {
                                                     minute: '2-digit',
                                                 })}
                                             </TableCell>
-                                            <TableCell className='w-[150px]'>
+                                            <TableCell className='w-[120px]'>
                                                 {new Date(cat.updated_at).toLocaleString('th-TH', {
                                                     year: 'numeric',
                                                     month: 'short',
@@ -151,7 +151,7 @@ export default function CategoryList() {
                                                     minute: '2-digit',
                                                 })}
                                             </TableCell>
-                                            <TableCell className='w-[150px]'>
+                                            <TableCell className='w-[120px]'>
                                                 <Popover>
                                                     <PopoverTrigger>
                                                         <EllipsisVertical className="cursor-pointer" />
@@ -209,31 +209,31 @@ export default function CategoryList() {
                         onClose={() => setIsSheetOpen(false)}
                     />
                 </div>
+
+                <Pagination className="px-4 py-4">
+                    <PaginationContent>
+                        <PaginationItem>
+                            <PaginationPrevious
+                                onClick={() => handlePageChange(pagination.prev_page_url)}
+                                className={pagination.prev_page_url ? '' : 'pointer-events-none opacity-50'}
+                            />
+                        </PaginationItem>
+
+                        <PaginationItem>
+                            <span className="text-sm px-2 py-1 border rounded">
+                                Page {pagination.current_page} of {pagination.last_page}
+                            </span>
+                        </PaginationItem>
+
+                        <PaginationItem>
+                            <PaginationNext
+                                onClick={() => handlePageChange(pagination.next_page_url)}
+                                className={pagination.next_page_url ? '' : 'pointer-events-none opacity-50'}
+                            />
+                        </PaginationItem>
+                    </PaginationContent>
+                </Pagination>
             </div>
-
-            <Pagination className="px-4 py-4">
-                <PaginationContent>
-                    <PaginationItem>
-                        <PaginationPrevious
-                            onClick={() => handlePageChange(pagination.prev_page_url)}
-                            className={pagination.prev_page_url ? '' : 'pointer-events-none opacity-50'}
-                        />
-                    </PaginationItem>
-
-                    <PaginationItem>
-                        <span className="text-sm px-2 py-1 border rounded">
-                            Page {pagination.current_page} of {pagination.last_page}
-                        </span>
-                    </PaginationItem>
-
-                    <PaginationItem>
-                        <PaginationNext
-                            onClick={() => handlePageChange(pagination.next_page_url)}
-                            className={pagination.next_page_url ? '' : 'pointer-events-none opacity-50'}
-                        />
-                    </PaginationItem>
-                </PaginationContent>
-            </Pagination>
         </AppLayout>
     )
 }
