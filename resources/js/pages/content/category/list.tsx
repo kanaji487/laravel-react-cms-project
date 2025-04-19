@@ -33,6 +33,7 @@ import {
 } from "@/components/ui/pagination";
 import { DataTable } from '@/components/data-table';
 import type { Column } from '@/components/data-table';
+import { FilterSheet } from '@/components/ui/filter-sheet';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -55,6 +56,10 @@ export default function CategoryList() {
     const { data: categories, ...pagination } = props.categories;
     const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
     const [isSheetOpen, setIsSheetOpen] = useState(false);
+    const [isFilterOpen, setIsFilterOpen] = useState(false)
+
+    const openFilterSheet = () => setIsFilterOpen(true)
+    const closeFilterSheet = () => setIsFilterOpen(false)
 
     const handlePageChange = (url: string | null) => {
         if (url) {
@@ -184,7 +189,11 @@ export default function CategoryList() {
                         />
                         <Button>Search</Button>
                     </div>
-                    <Button onClick={() => router.visit('/content/category/create')}>Create</Button>
+                    <div className='flex flex-row gap-4'>
+                        <Button onClick={() => router.visit('/content/category/create')}>Create</Button>
+                        <Button onClick={openFilterSheet}>Filter</Button>
+                    </div>
+                    <FilterSheet isOpen={isFilterOpen} onClose={closeFilterSheet} />
                 </div>
 
                 <div className='px-4 overflow-x-auto'>
