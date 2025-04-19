@@ -50,6 +50,14 @@ interface PaginatedCategories {
     prev_page_url: string | null;
 }
 
+type FilterValues = {
+    title: string
+    slug: string
+    description: string
+    language: string
+    status: string
+}
+
 export default function CategoryList() {
 
     const props = usePage().props as unknown as { categories: PaginatedCategories };
@@ -80,6 +88,13 @@ export default function CategoryList() {
             preserveScroll: true,
         });
     };
+
+    const handleFilterSubmit = (filters: FilterValues) => {
+        router.get('/content/category/list', filters, {
+            preserveScroll: true,
+            preserveState: true,
+        });
+    }
 
     const columns: Column<Category>[] = [
         { key: 'title', header: 'Title', className: 'w-[120px]' },
@@ -193,7 +208,11 @@ export default function CategoryList() {
                         <Button onClick={() => router.visit('/content/category/create')}>Create</Button>
                         <Button onClick={openFilterSheet}>Filter</Button>
                     </div>
-                    <FilterSheet isOpen={isFilterOpen} onClose={closeFilterSheet} />
+                    <FilterSheet 
+                        isOpen={isFilterOpen} 
+                        onClose={closeFilterSheet}
+                        onSubmit={handleFilterSubmit}
+                    />
                 </div>
 
                 <div className='px-4 overflow-x-auto'>

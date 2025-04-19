@@ -17,12 +17,36 @@ class CategoryController extends Controller
 {
     public function index(Request $request): Response
     {
-        $categories = Category::select('id', 'title', 'slug', 'description', 'created_at', 'updated_at', 'created_by', 'updated_by', 'obj_lang', 'obj_status')
-        ->orderBy('created_at', 'desc')
-        ->paginate(15);
+        $query = Category::select('id', 'title', 'slug', 'description', 'created_at', 'updated_at', 'created_by', 'updated_by', 'obj_lang', 'obj_status');
+
+        if ($request->filled('title')) {
+            $query->where('title', 'like', '%' . $request->title . '%');
+        }
+
+        if ($request->filled('slug')) {
+            $query->where('slug', 'like', '%' . $request->slug . '%');
+        }
+
+        if ($request->filled('description')) {
+            $query->where('description', 'like', '%' . $request->description . '%');
+        }
+
+        if ($request->filled('language')) {
+            $query->where('obj_lang', $request->language);
+        }
+
+        if ($request->filled('status')) {
+            $query->where('obj_status', $request->status);
+        }
+
+        $categories = $query
+            ->orderBy('created_at', 'desc')
+            ->paginate(15)
+            ->withQueryString();
 
         return Inertia::render('content/category/list', [
             'categories' => $categories,
+            'filters' => $request->only(['title', 'slug', 'description', 'language', 'status']),
         ]);
     }
 
