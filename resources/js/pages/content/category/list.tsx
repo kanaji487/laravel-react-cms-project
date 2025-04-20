@@ -24,16 +24,10 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
-import {
-    Pagination,
-    PaginationContent,
-    PaginationItem,
-    PaginationNext,
-    PaginationPrevious,
-} from "@/components/ui/pagination";
 import { DataTable } from '@/components/data-table';
 import type { Column } from '@/components/data-table';
 import { FilterSheet } from '@/components/ui/filter-sheet';
+import PaginationComponent from '@/components/pagination';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -68,15 +62,6 @@ export default function CategoryList() {
 
     const openFilterSheet = () => setIsFilterOpen(true)
     const closeFilterSheet = () => setIsFilterOpen(false)
-
-    const handlePageChange = (url: string | null) => {
-        if (url) {
-            router.visit(url, {
-                preserveScroll: true,
-                preserveState: true,
-            });
-        }
-    }
 
     const handleQuickView = (cat: Category) => {
         setSelectedCategory(cat);
@@ -231,29 +216,7 @@ export default function CategoryList() {
                     />
                 </div>
 
-                <Pagination className="px-4 py-4">
-                    <PaginationContent>
-                        <PaginationItem>
-                            <PaginationPrevious
-                                onClick={() => handlePageChange(pagination.prev_page_url)}
-                                className={pagination.prev_page_url ? '' : 'pointer-events-none opacity-50'}
-                            />
-                        </PaginationItem>
-
-                        <PaginationItem>
-                            <span className="text-sm px-2 py-1 border rounded">
-                                Page {pagination.current_page} of {pagination.last_page}
-                            </span>
-                        </PaginationItem>
-
-                        <PaginationItem>
-                            <PaginationNext
-                                onClick={() => handlePageChange(pagination.next_page_url)}
-                                className={pagination.next_page_url ? '' : 'pointer-events-none opacity-50'}
-                            />
-                        </PaginationItem>
-                    </PaginationContent>
-                </Pagination>
+                <PaginationComponent />
             </div>
         </AppLayout>
     )
