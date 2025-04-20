@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/popover";
 import { DataTable } from '@/components/data-table';
 import type { Column } from '@/components/data-table';
-import { FilterSheet } from '@/components/ui/filter-sheet';
+import { FilterSheet } from './filter';
 import PaginationComponent from '@/components/pagination';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -84,11 +84,15 @@ export default function CategoryList() {
   };
 
   const handleFilterSubmit = (filters: FilterValues) => {
-    router.get('/content/category/list', filters, {
+    const cleanedFilters = Object.fromEntries(
+      Object.entries(filters).filter(([_, value]) => value !== '')
+    );
+  
+    router.get('/content/category/list', cleanedFilters, {
       preserveScroll: true,
       preserveState: true,
     });
-  }
+  };
 
   const columns: Column<Category>[] = [
     { key: 'title', header: 'Title', className: 'w-[120px]' },
