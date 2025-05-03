@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Settings\PasswordController;
 use App\Http\Controllers\Settings\ProfileController;
-use App\Http\Controllers\Settings\ModuleController;
+use App\Http\Controllers\Settings\RoleController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -20,5 +20,6 @@ Route::middleware('auth')->group(function () {
         return Inertia::render('settings/appearance');
     })->name('appearance');
 
-    Route::get('settings/module', [ModuleController::class, 'index'])->name('module.index');
+    Route::get('settings/role', [RoleController::class, 'index'])->name('role.index');
+    Route::get('/settings/role/create', [RoleController::class, 'create'])->name('roles.create');
 });

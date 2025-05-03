@@ -98,7 +98,7 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                             <InputError className="mt-2" message={errors.profile_picture} />
                         </div>
 
-                        <div className="grid gap-2">
+                        <div className="grid gap-2 md:max-w-lg">
                             <Label htmlFor="name">Name</Label>
                             <Input
                                 id="name"
@@ -112,7 +112,7 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                             <InputError className="mt-2" message={errors.name} />
                         </div>
 
-                        <div className="grid gap-2">
+                        <div className="grid gap-2 md:max-w-lg">
                             <Label htmlFor="email">Email address</Label>
                             <Input
                                 id="email"

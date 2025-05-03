@@ -11,10 +11,15 @@ use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class ModuleController extends Controller
+class RoleController extends Controller
 {
     public function index(Request $request): Response
     {
-        return Inertia::render('settings/module');
+        return Inertia::render('settings/role');
+    }
+
+    public function create()
+    {
+        return Inertia::render('settings/role_create');
     }
 }
