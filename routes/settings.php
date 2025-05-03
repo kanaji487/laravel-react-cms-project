@@ -22,4 +22,5 @@ Route::middleware('auth')->group(function () {
 
     Route::get('settings/role', [RoleController::class, 'index'])->name('role.index');
     Route::get('/settings/role/create', [RoleController::class, 'create'])->name('roles.create');
+    Route::post('settings/role/create', [RoleController::class, 'store'])->name('roles.store');
 });
