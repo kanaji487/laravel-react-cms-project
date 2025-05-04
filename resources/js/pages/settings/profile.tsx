@@ -20,6 +20,15 @@ import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
 import SettingsLayout from '@/layouts/settings/layout';
 import CropImageModal from '@/core/crop-image-modal';
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -29,21 +38,26 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 type ProfileForm = {
+    id: number;
     name: string;
     email: string;
     profile_picture: File | null;
+    role_id: number;
 }
 
 export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: boolean; status?: string }) {
-    const { auth } = usePage<SharedData>().props;
+    const { auth } = usePage<{ auth: { user: { id: number; name: string; email: string; role_id: number; profile_picture: string | null } } }>().props;
     const getInitials = useInitials();
     const [showCrop, setShowCrop] = useState(false);
     const [srcImage, setSrcImage] = useState<string | null>(null);
+    const { roles } = (usePage().props as unknown as { roles: { id: number; name: string }[] });
 
     const { data, setData, post, errors, processing, recentlySuccessful } = useForm<Required<ProfileForm>>({
+        id: auth.user.id,
         name: auth.user.name,
         email: auth.user.email,
-        profile_picture: null
+        profile_picture: null,
+        role_id: auth.user.role_id,
     });
 
     const submit: FormEventHandler = (e) => {
@@ -127,7 +141,29 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                             <InputError className="mt-2" message={errors.email} />
                         </div>
 
-                        {mustVerifyEmail && auth.user.email_verified_at === null && (
+                        <div className="grid gap-2 md:max-w-lg">
+                            <Label htmlFor="role">Role</Label>
+                            <Select
+                                value={data.role_id?.toString()}
+                                onValueChange={(value) => setData('role_id', parseInt(value))}
+                            >
+                                <SelectTrigger id="role">
+                                    <SelectValue placeholder="Select role" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectLabel>Roles</SelectLabel>
+                                        {roles.map((role) => (
+                                            <SelectItem key={role.id} value={role.id.toString()}>
+                                                {role.name}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
+                        </div>
+
+                        {/* {mustVerifyEmail && auth.user.email_verified_at === null && (
                             <div>
                                 <p className="text-muted-foreground -mt-4 text-sm">
                                     Your email address is unverified.{' '}
@@ -147,7 +183,7 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                                     </div>
                                 )}
                             </div>
-                        )}
+                        )} */}
 
                         <div className="flex items-center gap-4">
                             <Button disabled={processing}>Save</Button>

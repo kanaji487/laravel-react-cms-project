@@ -77,7 +77,7 @@ export default function RoleList() {
                 <div className="space-y-6">
                     <HeadingSmall title="Role management" description="Create, edit and delete role" />
                 </div>
-                <div className="flex flex-row gap-4">
+                <div className="flex flex-row justify-between items-center">
                     <div className="flex flex-row gap-4">
                         <Input type="text" className="w-1xl border border-gray-300" />
                         <Button>Search</Button>
