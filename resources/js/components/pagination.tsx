@@ -1,7 +1,3 @@
-import React from 'react';
-import { usePage } from '@inertiajs/react';
-import { router } from '@inertiajs/react';
-import { Category } from '@/types/category';
 import {
     Pagination,
     PaginationContent,

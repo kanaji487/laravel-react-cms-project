@@ -17,7 +17,25 @@ class RoleController extends Controller
 {
     public function index(Request $request): Response
     {
-        return Inertia::render('settings/role/list');
+        $query = Role::select('id', 'name', 'description', 'permission', 'created_at', 'updated_at', 'created_by', 'updated_by');
+
+        if ($request->filled('name')) {
+            $query->where('name', 'like', '%' . $request->name . '%');
+        }
+
+        if ($request->filled('description')) {
+            $query->where('description', 'like', '%' . $request->description . '%');
+        }
+
+        $roles = $query
+            ->orderBy('created_at', 'desc')
+            ->paginate(15)
+            ->withQueryString();
+
+        return Inertia::render('settings/role/list', [
+            'roles' => $roles,
+            'filters' => $request->only(['name', 'description']),
+        ]);
     }
 
     public function create()
