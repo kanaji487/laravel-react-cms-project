@@ -9,8 +9,9 @@ use Inertia\Inertia;
 Route::middleware('auth')->group(function () {
     Route::redirect('settings', 'settings/profile');
 
-    Route::get('settings/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::match(['patch', 'post'], '/settings/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('settings/profile', [ProfileController::class, 'index'])->name('profile.index');
+    Route::get('settings/profile/{id}/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::match(['patch', 'post'], '/settings/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('settings/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('settings/password', [PasswordController::class, 'edit'])->name('password.edit');
